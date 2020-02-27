@@ -1,0 +1,30 @@
+# We use in memory SQLite3 for testing
+
+doctrine:
+    dbal:
+        default_connection: default
+        connections:
+            default:
+                # configure these for your database server
+                driver: 'pdo_sqlite'
+                server_version: ~
+                charset: utf8mb4
+
+                # With Symfony 3.3, remove the `resolve:` prefix
+                url: ~
+                path: '%kernel.cache_dir%/test.db'
+                # Uncomment this to run mysql tests, comment out the above
+                # Make sure to comment out tests/Helper/EventSubscriber/ForeignKeyEnabler.php:36
+                #url: mysql://root:root@127.0.0.1:3306/app
+            audit:
+                # configure these for your database server
+                driver: 'pdo_sqlite'
+                server_version: ~
+                charset: utf8mb4
+
+                # With Symfony 3.3, remove the `resolve:` prefix
+                url: ~
+                path: '%kernel.cache_dir%/audit.db'
+                # Uncomment this to run mysql tests, comment out the above
+                # Make sure to comment out tests/Helper/EventSubscriber/ForeignKeyEnabler.php:36
+                #url: mysql://root:root@127.0.0.1:3306/audit

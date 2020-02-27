@@ -1,0 +1,56 @@
+framework:
+    workflows:
+        deal:
+            type: state_machine
+            supports:
+                - App\Entity\Deal
+            marking_store:
+                type: single_state
+                arguments:
+                    - status
+            initial_place: drafting
+            places:
+                drafting:
+                    metadata:
+                        simplified: drafting
+                issued:
+                    metadata:
+                        simplified: issued
+                review:
+                    metadata:
+                        simplified: review
+                concierge:
+                    metadata:
+                        simplified: review
+                negoSender:
+                    metadata:
+                        simplified: negotiation
+                negoReceiver:
+                    metadata:
+                        simplified: negotiation
+            transitions:
+                issue:
+                    from: [drafting]
+                    to: issued
+                cancelIssue:
+                    from: [issued]
+                    to: drafting
+                startReview:
+                    from: [issued]
+                    to: review
+                startConcierge:
+                    from: [issued, review]
+                    to: concierge
+                cancelConciergeToIssued:
+                    from: [concierge]
+                    to: issued
+                cancelConciergeToReview:
+                    from: [concierge]
+                    to: review
+                sendToSender:
+                    from: [review, concierge, negoReceiver]
+                    to: negoSender
+                sendToReceiver:
+                    from: [negoSender]
+                    to: negoReceiver
+
