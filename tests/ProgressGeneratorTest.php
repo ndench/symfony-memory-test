@@ -37,6 +37,132 @@ class ProgressGeneratorTest extends WebTestCase
         );
     }
 
+    public function testIssued(): void
+    {
+        static::bootKernel();
+        $generator = static::$container->get(ProgressGenerator::class);
+
+        $deal = $this->loadFixtureFiles(
+            [
+                __DIR__.'/fixtures/issued_deal.yml',
+            ]
+        )['deal'];
+
+        $progress = $generator->generateProgress($deal);
+
+        $this->assertProgressData(
+            [DealWorkflow::SIMPLE_DRAFTING],
+            DealWorkflow::SIMPLE_ISSUED,
+            [
+                DealWorkflow::SIMPLE_REVIEW,
+                DealWorkflow::SIMPLE_NEGOTIATION,
+            ],
+            $progress
+        );
+    }
+
+    public function testReview(): void
+    {
+        static::bootKernel();
+        $generator = static::$container->get(ProgressGenerator::class);
+
+        $deal = $this->loadFixtureFiles(
+            [
+                __DIR__.'/fixtures/review_deal.yml',
+            ]
+        )['deal'];
+
+        $progress = $generator->generateProgress($deal);
+
+        $this->assertProgressData(
+            [
+                DealWorkflow::SIMPLE_DRAFTING,
+                DealWorkflow::SIMPLE_ISSUED,
+            ],
+            DealWorkflow::SIMPLE_REVIEW,
+            [
+                DealWorkflow::SIMPLE_NEGOTIATION,
+            ],
+            $progress
+        );
+    }
+
+    public function testConcierge(): void
+    {
+        static::bootKernel();
+        $generator = static::$container->get(ProgressGenerator::class);
+
+        $deal = $this->loadFixtureFiles(
+            [
+                __DIR__.'/fixtures/concierge_deal.yml',
+            ]
+        )['deal'];
+
+        $progress = $generator->generateProgress($deal);
+
+        $this->assertProgressData(
+            [
+                DealWorkflow::SIMPLE_DRAFTING,
+                DealWorkflow::SIMPLE_ISSUED,
+            ],
+            DealWorkflow::SIMPLE_REVIEW,
+            [
+                DealWorkflow::SIMPLE_NEGOTIATION,
+            ],
+            $progress
+        );
+    }
+
+    public function testNegoSender(): void
+    {
+        static::bootKernel();
+        $generator = static::$container->get(ProgressGenerator::class);
+
+        $deal = $this->loadFixtureFiles(
+            [
+                __DIR__.'/fixtures/negoSender_deal.yml',
+            ]
+        )['deal'];
+
+        $progress = $generator->generateProgress($deal);
+
+        $this->assertProgressData(
+            [
+                DealWorkflow::SIMPLE_DRAFTING,
+                DealWorkflow::SIMPLE_ISSUED,
+                DealWorkflow::SIMPLE_REVIEW,
+            ],
+            DealWorkflow::SIMPLE_NEGOTIATION,
+            [],
+            $progress
+        );
+    }
+
+    public function testNegoReceiver(): void
+    {
+        static::bootKernel();
+        $generator = static::$container->get(ProgressGenerator::class);
+
+        $deal = $this->loadFixtureFiles(
+            [
+                __DIR__.'/fixtures/negoReceiver_deal.yml',
+            ]
+        )['deal'];
+
+        $progress = $generator->generateProgress($deal);
+
+        $this->assertProgressData(
+            [
+                DealWorkflow::SIMPLE_DRAFTING,
+                DealWorkflow::SIMPLE_ISSUED,
+                DealWorkflow::SIMPLE_REVIEW,
+            ],
+            DealWorkflow::SIMPLE_NEGOTIATION,
+            [],
+            $progress
+        );
+    }
+
     private function assertProgressData(
         array $previous,
         string $current,
