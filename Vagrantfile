@@ -2,7 +2,9 @@
 # vi: set ft=ruby :
 
 $once = <<SCRIPT
-make setup -C /srv/www/app
+sudo phpdismod xdebug
+sudo systemctl restart php7.3-fpm
+make link-var vendor -C /srv/www/app
 SCRIPT
 
 Vagrant.configure("2") do |config|
